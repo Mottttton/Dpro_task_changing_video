@@ -1,27 +1,25 @@
-$(function () {
-  const titleArea = $("#title");
-  const contentArea = $("#content");
-  const videoArea = $("#video");
-  const btn = $("#btn");
-  let jsonIndex = 0;
+let number = 0;
+const videoArea = document.getElementById("video");
+const titleArea = document.getElementById("title");
+const contentArea = document.getElementById("content");
+const button = document.getElementById('btn');
 
-  function getData() {
-    return $.ajax("ajax.json", {
-      type: 'GET'
-    });
-  }
-  
-  function changeVideo() {
-    btn.click(function () {
-      getData().then(function(data){
-        titleArea.html(data[jsonIndex].title);
-        contentArea.html(data[jsonIndex].content);
-        videoArea.attr("src", data[jsonIndex].url);
-        jsonIndex == 2 ? (jsonIndex = 0) : jsonIndex++;
-      })
-    });
-
-  }
-
-  changeVideo();
-});
+function getData() {
+  button.addEventListener('click', e => {
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if (request.readyState == 4) {
+        if(request.status == 200) {
+          titleArea.innerHTML = request.response[number].title;
+          contentArea.innerHTML = request.response[number].content;
+          videoArea.setAttribute("src", request.response[number].url);
+          number == 2 ? number = 0 : number++;
+        }
+      }
+    }
+    request.open("GET", "ajax.json");
+    request.responseType = "json";
+    request.send(null);
+  })
+}
+window.onload = getData;
