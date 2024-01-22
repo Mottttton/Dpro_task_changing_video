@@ -6,18 +6,22 @@ $(function () {
   let jsonIndex = 0;
 
   function getData() {
+    return $.ajax("ajax.json", {
+      type: 'GET'
+    });
+  }
+  
+  function changeVideo() {
     btn.click(function () {
-      $.ajax('ajax.json', {
-        type: 'GET',
-        success: function (data) {
-          titleArea.html(data[jsonIndex].title);
-          contentArea.html(data[jsonIndex].content);
-          videoArea.attr('src', data[jsonIndex].url);
-          jsonIndex == 2 ? jsonIndex = 0 : jsonIndex++;
-        },
+      getData().then(function(data){
+        titleArea.html(data[jsonIndex].title);
+        contentArea.html(data[jsonIndex].content);
+        videoArea.attr("src", data[jsonIndex].url);
+        jsonIndex == 2 ? (jsonIndex = 0) : jsonIndex++;
       })
     });
-  };
 
-  getData();
-})
+  }
+
+  changeVideo();
+});
